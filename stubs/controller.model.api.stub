@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use Sdkconsultoria\Core\Controllers\ResourceApiController;
+
+class {{ class }} extends ResourceApiController
+{
+    protected $model = \{{ namespacedModel }}::class;
+}

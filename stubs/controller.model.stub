@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use Sdkconsultoria\Core\Controllers\ResourceController;
+
+class {{ class }} extends ResourceController
+{
+    protected $model = \{{ namespacedModel }}::class;
+}

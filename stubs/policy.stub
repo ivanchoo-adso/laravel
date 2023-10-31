@@ -1,0 +1,10 @@
+<?php
+
+namespace {{ namespace }};
+
+use Sdkconsultoria\Core\Policies\BasicPolicy;
+
+class {{ class }} extends BasicPolicy
+{
+
+}
