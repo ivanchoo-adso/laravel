@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
-
+// Método index para listar mensajes
     public function index(){
 
         try{
-
+ // Consulta a la base de datos para obtener mensajes
             $messages = DB::table('messages as m')
             ->select('m.*') // Especifica las columnas que necesitas, o usa 'm.*' para seleccionar todas
             ->whereIn('m.id', function($query){
@@ -30,12 +30,12 @@ class MessageController extends Controller
             })
             ->orderByDesc('m.id')
             ->get();
-
+// Retorna una respuesta JSON con los mensajes
             return response()->json([
                 'success'=> true,
                 'data'=> $messages,
             ],200);
-
+// Manejo de excepciones
         }catch(Exception $e){
             return response()->json([
                 'success'=> false,
@@ -44,11 +44,11 @@ class MessageController extends Controller
 
         }
     }
-
+// Método show para mostrar mensajes de un ID de WhatsApp específico
     public function show($waId, Request $request){
 
         try{
-
+// Consulta a la base de datos para obtener mensajes, pero filtrado por 'wa_id'
             $messages = DB::table('messages as m')
             ->where('wa_id',$waId)
             ->orderBy('created_at')
@@ -71,7 +71,7 @@ class MessageController extends Controller
 
     public function sendMessages(){
         try{
-          /*  $token=env('WHATSAPP_API_TOKEN');
+          /*$token=env('WHATSAPP_API_TOKEN');
             $phoneId=env('WHATSAPP_API_PHONE_ID');
             $version='v17.0';
             $payload =[
@@ -105,9 +105,11 @@ class MessageController extends Controller
             ],500);
         }}
 
+// Método verifywebhook para verificar webhooks
         public function verifywebhook(Request $request)
         {
             try{
+                // Implementación de verificación de webhooks
                 $verifytoken='ivantabares123!';
                 $query = $request->query();
 
@@ -132,6 +134,8 @@ class MessageController extends Controller
                 ],500);
             }
         }
+
+        // Método processWebhook para procesar webhooks recibidos
         public function processWebhook(Request $request):JsonResponse
         {
             try{
@@ -148,7 +152,7 @@ class MessageController extends Controller
                         $wam->save();
                         Webhook::dispatch($wam, true);
                     }
-
+                //procesar el contenido del webhook
 
                 }elseif(!empty($value['messages'])){
                     $exist=Message::where('wam_id',$value['messages'][0]['id'])->first();
@@ -212,7 +216,7 @@ class MessageController extends Controller
                 ],500);
             }
         }
-
+ // Método _saveMessage para guardar mensajes en la base de datos
         private function _saveMessage($message, $messageType, $waId, $wamId, $timestamp = null, $caption = null, $data='')
         {
             $wam = new Message();
@@ -224,14 +228,15 @@ class MessageController extends Controller
             $wam->status = 'sent';
             $wam->caption = $caption;
             $wam->data = $data;
-
+// Guarda el mensaje en la base de datos
 
             $wam->save();
 
             return $wam;
         }
+        // Método store para guardar mensajes nuevos
         public function store(Request $request){
-
+        // Valida y guarda un mensaje nuevo enviado a través de la API
             try{
                 $request->validate([
                     'wa_id' => ['required', 'max:20'],
